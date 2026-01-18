@@ -1,0 +1,56 @@
+---
+title: "Assignment 1: Introduction"
+author: "Lexi Nelson"
+output: pdf_document
+---
+
+## OVERVIEW
+
+This exercise accompanies the introductory material in Environmental Data Analytics. 
+
+## Directions
+1.  Rename this file `<FirstLast>_A01_Introduction.Rmd` (replacing `<FirstLast>` with your first and last name).
+2.  Change "Student Name" on line 3 (above) with your name.
+4.  Be sure to **answer the questions** in this assignment document.
+5.  When you have completed the assignment, **Knit** the text and code into a single PDF file.
+6.  After Knitting, submit the completed exercise (PDF file) to the appropriate assignment section on Canvas.
+
+7.  Initial here to acknowledge that you did not use AI at all in completing this assignment:AN 
+
+---
+
+## 1) Concept and Discussion Questions
+Enter answers to the questions just below the >Answer: prompt.
+
+1. What are your previous experiences with data analytics, R, and Git? Include both formal and informal training.
+
+> Answer: In undergrad, I took an introductory computer science course where we learned data structures, programming principles, and utilized Pyret and Python. In 2022-2023 I worked in data analytics within the renewable energy industry. My company had a proprietary code base in R and we also used Git. After that I transitioned into consulting and project management where I have utilized data analytics skills far less often, so I am excited to brush back up on R. I am also looking forward to learning R from the ground up in an academic setting rather than learning it on the job as I previously did.
+
+2. Are there any components of the course about which you feel confident?
+
+> Answer: I feel confident about the entirety of the course given my past experience, I am also a quantitative leaning person (undergrad degree in engineering). I worked in Python during the fall in the Modeling for Energy Systems class and it went well. 
+
+3. Are there any components of the course about which you feel apprehensive?
+
+> Answer: No, but I am taking a course overload this semester while applying for internships so my only concern is about a heavy workload in general.
+
+4. Describe a dataset you have used in the past. Explain whether it was a primary or secondary dataset. 
+
+> Answer:I previously worked for a firm called Opinion Dynamics where we completed evaluations of utility incentive programs, one being the Duke Energy Online Savings store (OSS). My objective was to produce a report on the purchases customers made through the Duke Energy OSS, including summary statistics of purchases and financial and energy savings. I used a primary dataset that we had obtained by conducting a survey specifically for this purpose. Customers received a gift card if they completed a survey where they directly entered information on their OSS purchases. My firm used an online platform to convert the survey data into a primary dataset in excel that included fields such as product type, date of purchase, cost, unique product identifier, and unique customer identifier.
+
+5. Would you describe the day of the month as a nominal, ordinal, interval, or ratio number? Explain your reasoning.
+
+> Answer: I would describe the day of the month as ordinal data because day number relates to the order of days as a sequence, but does not describe magnitude. Day of the month could be considered interval if you are looking at two days within the same month. Only in that case do the values mean something with relation to one another (for example on the 4th day of the month twice as many days have passed as on the second day of the month).
+
+---
+
+## 2) GitHub
+
+Provide a link below to your forked course repository in GitHub. Make sure you have pulled all recent changes from the course repository and that you have updated your course README file, committed those changes, and pushed them to your GitHub account. 
+
+> Answer: 
+
+---
+
+## 3) Knitting
+When you have completed this document, click the `knit` button.This should produce a PDF copy of your markdown document. Submit this PDF to Canvas 
