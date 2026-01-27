@@ -68,7 +68,14 @@ print(mean_plus_sd) #use print so that R displays results
 9.  Label the columns of your data frame with informative titles.
 
 ```{r basics 2}
-
+student_names <- c("A", "E", "C", "D") #character vector
+test_scores <- c(60, 70, 80, 90) #numeric vector (integer vector)
+scholarship <- c(TRUE, FALSE, FALSE, TRUE) #logical vector
+test_results <- as.data.frame(student_names) #create a data frame. test_results is my informative name because the data frame will compile scores by name and scholarship status
+class(test_results) #check this is a data frame
+test_results <- cbind(student_names, test_scores, scholarship)
+print(test_results)
+colnames(test_results) #shows that the vector names became the column names, and these were already informative
 
 ```
 
