@@ -71,17 +71,17 @@ print(mean_plus_sd) #use print so that R displays results
 student_names <- c("A", "E", "C", "D") #character vector
 test_scores <- c(60, 70, 80, 90) #numeric vector (integer vector)
 scholarship <- c(TRUE, FALSE, FALSE, TRUE) #logical vector
+
 test_results <- as.data.frame(student_names) #create a data frame. test_results is my informative name because the data frame will compile scores by name and scholarship status
 class(test_results) #check this is a data frame
 test_results <- cbind(student_names, test_scores, scholarship)
 print(test_results)
 colnames(test_results) #shows that the vector names became the column names, and these were already informative
-
 ```
 
 10.  QUESTION: How is this data frame different from a matrix?
 
-> Answer:
+> Answer:This data frame is different from a matrix because a matrix can only store data of a uniform data type. Here we have used our data frame to store both strings and numbers.
 
 ---
 
@@ -97,21 +97,38 @@ colnames(test_results) #shows that the vector names became the column names, and
 
 ```{r basics 3}
 #11. Create a function using if...else
+pass_or_fail <- function(x){
+    if (x > 50) {
+  print("Pass") #returns the word pass if x is greater than 50
+} else {
+  print("Fail") #returns the word fail if x is not greater than 50
+}
+}
 
 #12. Create a function using ifelse()
+pass_or_fail_2 <- function(x){
+    ifelse (x > 50, "Pass", "Fail") 
+  #the second argument determines the output if the expression evaluated with the first argument is true, and the third argument determines the output if the expression is false
+}
+
 
 #13a. Run the first function with the value 54
+pass_or_fail(54) #returns Pass which indicates the function is working correctly
 
 #13b. Run the second function with the value 54
+pass_or_fail_2(54) #returns Pass which again indicates the function is working correctly
 
 #14a. Run the first function with the vector of test scores
+#pass_or_fail(test_scores) 
+#this is commented out since it generated an error message
 
 #14b. Run the second function with the vector of test scores
+pass_or_fail_2(test_scores)
 ```
 
 15. QUESTION: Which option of `if`...`else` vs. `ifelse` worked? Why? (Hint: search the web for "R vectorization"; it's ok here if an AI response is presented in the search response.)
 
-> Answer:
+> Answer: Ifelse works but not if...else because ifelse is a vectorized function in R, meaning it is designed to operate on one element after another across the length of a vector. On the other hand, if...else is not vectorized and is only intended to function with one single input.
 
 
 **NOTE** Before knitting, you'll need to comment out the call to the function in Q14 that does not work. (A document can't knit if the code it contains causes an error!)
