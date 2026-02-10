@@ -29,7 +29,8 @@ Do not use any AI tools in completing this assignment.
 
 1b. Check your working directory.
 
-1c. Read in all four raw data files associated with the EPA Air dataset, being sure to set string columns to be read in a factors. See the README file for the EPA air datasets for more information (especially if you have not worked with air quality data previously). 
+1c. Read in all four raw data files associated with the EPA Air dataset, being sure to set string columns to be read in a factors. See the README file for the EPA air datasets for more information (especially if you have not worked with 
+air quality data previously). 
 
 2. Add the appropriate code to reveal the dimensions of the four datasets. 
 
@@ -86,7 +87,8 @@ dim(EPAair_PM25_2019) #8581 rows by 20 columns
 4. Create new dataframes with just the following columns:  
   'Date', 'DAILY_AQI_VALUE', 'Site.Name', 'AQS_PARAMETER_DESC', 'COUNTY', 'SITE_LATITUDE', 'SITE_LONGITUDE'
 
-5. For the PM2.5 datasets, fill all cells in AQS_PARAMETER_DESC with "PM2.5" (all cell values in this column should be identical).
+5. For the PM2.5 datasets, fill all cells in AQS_PARAMETER_DESC with "PM2.5" 
+(all cell values in this column should be identical).
 
 6. Save all four processed datasets in the Processed folder. Use the same file names as the raw files but replace "raw" with "processed".
 
@@ -180,7 +182,8 @@ write.csv(
   
   * Hint: the dimensions of this dataset should be 14,752 x 9.
 
-10. Spread your datasets such that AQI values for ozone and PM2.5 are in separate columns. Each location on a specific date should now occupy only one row.
+10. Spread your datasets such that AQI values for ozone and PM2.5 are in 
+separate columns. Each location on a specific date should now occupy only one row.
 
 11. Call up the dimensions of your new tidy dataset.
 
@@ -202,7 +205,7 @@ dim(O3_PM_combined) #37,893 rows by 7 columns
 library(lubridate)
 O3_PM_combined_wrangled <- 
   O3_PM_combined %>% #include only sites that dataframes have in common
-  mutate(Month = month(Date)) %>% #parse date column, add year & month separately
+  mutate(Month = month(Date)) %>% #parse date column, add year & month columns
   mutate(Year = year(Date)) %>%
   filter(Site.Name %in% c("Linville Falls", "Durham Armory", "Leggett", "Hattie Avenue",  
     "Clemmons Middle", "Mendenhall School", "Frying Pan Mountain", 
@@ -217,11 +220,12 @@ O3_PM_combined_wrangled <-
 
 #10
 #Spread your datasets such that AQI values for ozone and PM2.5 are in separate columns
-O3_PM_combined_wrangled_spread <- pivot_wider(O3_PM_combined_wrangled, names_from = AQS_PARAMETER_DESC, values_from = meanAQI)
+O3_PM_combined_wrangled_spread <- pivot_wider(O3_PM_combined_wrangled, 
+                                              names_from = AQS_PARAMETER_DESC, values_from = meanAQI)
 
 #11
 #find dimensions of new dataset
-dim(O3_PM_combined_wrangled_spread) #8976 tows by 9 columns
+dim(O3_PM_combined_wrangled_spread) #8976 rows by 9 columns
 
 #12
 #save processed dataset
@@ -242,15 +246,31 @@ write.csv(
 ```{r questions 13 and 14}
 
 #13
+#create a summary dataset and save as new dataframe
+O3_PM_combined_wrangled_spread_summary <- 
+  O3_PM_combined_wrangled_spread %>% 
+  group_by(Site.Name, Month, Year) %>% #split into groups by site, month, year
+  #compute mean AQI values
+  summarise(mean_Ozone = mean(Ozone), 
+            mean_PM2.5 = mean(PM2.5)) %>%
+  drop_na(mean_Ozone) #remove instances where mean ozone values not available
+#Use of split/apply/combine
 
 #14
+#find dimensions of new dataset
+dim(O3_PM_combined_wrangled_spread_summary) #182 rows by 9 columns
 
 
 ```
 
 15. Why did we use the function `drop_na` rather than `na.omit`? Hint: replace `drop_na` with `na.omit` in part 13 and observe what happens with the dimensions of the summary date frame.
 
-> Answer: 
+> Answer: Using na.omit in place of drop_na cut the dataset down to 101 rows.
+#I observed that all NA values had been dropped in the dataset including PM25 
+#values, rather than just the instances of ozone being NA which is what we 
+#wanted to drop
+#Therefore we use drop_na so we can selectively drop NA values in one column
+#rather than the entire dataframe.
 
 16. Stage, commit, and push your Assignment to your GitHub account. Provide a link to your repository below.
 
