@@ -85,7 +85,8 @@ dim(EPAair_PM25_2019) #8581 rows by 20 columns
 3. Change any date columns to be date objects.
 
 4. Create new dataframes with just the following columns:  
-  'Date', 'DAILY_AQI_VALUE', 'Site.Name', 'AQS_PARAMETER_DESC', 'COUNTY', 'SITE_LATITUDE', 'SITE_LONGITUDE'
+  'Date', 'DAILY_AQI_VALUE', 'Site.Name', 'AQS_PARAMETER_DESC', 
+  'COUNTY', 'SITE_LATITUDE', 'SITE_LONGITUDE'
 
 5. For the PM2.5 datasets, fill all cells in AQS_PARAMETER_DESC with "PM2.5" 
 (all cell values in this column should be identical).
@@ -119,14 +120,19 @@ class(EPAair_PM25_2019$Date) #now it is a date
 #4
 #create new dataframes with only selected few columns
 #will also rename these dataframes since shorter names are easier to work with
-O3_2018 <- select(EPAair_O3_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+O3_2018 <- select(EPAair_O3_2018, Date, DAILY_AQI_VALUE, 
+                  Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE,
+                  SITE_LONGITUDE)
 dim(O3_2018) #confirm there are now 7 columns in this dataframe
 
-O3_2019 <- select(EPAair_O3_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+O3_2019 <- select(EPAair_O3_2019, Date, DAILY_AQI_VALUE, Site.Name,
+                  AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-PM25_2018 <- select(EPAair_PM25_2018, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+PM25_2018 <- select(EPAair_PM25_2018, Date, DAILY_AQI_VALUE, Site.Name,
+                    AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
-PM25_2019 <- select(EPAair_PM25_2019, Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
+PM25_2019 <- select(EPAair_PM25_2019, Date, DAILY_AQI_VALUE, Site.Name,
+                    AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE)
 
 
 #5
@@ -221,7 +227,8 @@ O3_PM_combined_wrangled <-
 #10
 #Spread your datasets such that AQI values for ozone and PM2.5 are in separate columns
 O3_PM_combined_wrangled_spread <- pivot_wider(O3_PM_combined_wrangled, 
-                                              names_from = AQS_PARAMETER_DESC, values_from = meanAQI)
+                                              names_from = AQS_PARAMETER_DESC,
+                                              values_from = meanAQI)
 
 #11
 #find dimensions of new dataset
