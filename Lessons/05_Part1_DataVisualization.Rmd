@@ -1,4 +1,4 @@
----
+    ---
 title: "5: Part 1 - Data Visualization Basics"
 author: "Environmental Data Analytics | John Fay and Luana Lima | Developed by Kateri Salk"
 date: "Spring 2026"
