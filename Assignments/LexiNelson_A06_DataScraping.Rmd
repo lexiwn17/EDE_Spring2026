@@ -32,7 +32,8 @@ library(tidyverse)
 library(here); 
 here() #pointing me to the Assignments folder where I am currently working
 library(rvest)
-
+library(lubridate)
+library(dplyr)
 
 ```
 
@@ -90,8 +91,6 @@ MGD_month <- webpage %>%
   html_nodes("th~ td+ td") %>% 
   html_text()
 MGD_month
-#this is an incomplete list because I was stumped at how to figure out how to
-#get the selector to select everything. 
 
 ```
 
@@ -111,11 +110,21 @@ df_withdrawals <- data.frame("Month" = c(1,5,9,2,6,10,3,7,11,4,8,12),
                              "WaterSystemName" = rep(water_system_name),
                              "ContactPerson" = rep(contact_person),
                              "Ownership" = rep(ownership),
-                             "MaximumDailyWithdrawl" = as.numeric(MGD_month))
+                             "MaximumDailyWithdrawl" = as.numeric(MGD_month),
+                             "Year" = rep(2024))
+
+#add date column with month and year in data format
+#I am not aure what data format means. this comes from instructions.
+#I will assume Date format
+
+df_withdrawals <- df_withdrawals %>%
+  mutate(Date = as.Date(paste(Year, Month, "01", sep = "-")))
+class(df_withdrawals$Date) #make sure it is still in date format
+show(df_withdrawals)
 
 
 #5 
-#create line plot of maximum daily withdrawlas across months
+#create line plot of maximum daily withdrawals across months
 df_withdrawals <-
   ggplot(df_withdrawals, aes(x = Month, y = MaximumDailyWithdrawl)) +
   geom_line() +
@@ -151,9 +160,12 @@ scrape.it <- function(the_year, the_PWSID){
 
   #Scrape the data
   #<enter code from above here>
-  the_water_system_name <- the_website %>% html_nodes('div+ table tr:nth-child(1) td:nth-child(2)') %>% html_text()
-  the_contact_person <- the_website %>% html_nodes('div+ table tr:nth-child(4) td:nth-child(2)') %>% html_text()
-  the_ownership <- the_website %>% html_nodes('div+ table tr:nth-child(2) td:nth-child(4)') %>% html_text()
+  the_water_system_name <- the_website %>% 
+    html_nodes('div+ table tr:nth-child(1) td:nth-child(2)') %>% html_text()
+  the_contact_person <- the_website %>% 
+    html_nodes('div+ table tr:nth-child(4) td:nth-child(2)') %>% html_text()
+  the_ownership <- the_website %>% 
+    html_nodes('div+ table tr:nth-child(2) td:nth-child(4)') %>% html_text()
   the_MGD_month <- the_website %>% html_nodes('th~ td+ td') %>% html_text()
   
   #Convert to dataframe
@@ -163,7 +175,8 @@ scrape.it <- function(the_year, the_PWSID){
     Water_System_Name = the_water_system_name,
     Contact_Person = the_contact_person,
     Ownership = the_ownership,
-    Maximum_Daily_Withdrawal = the_MGD_month
+    Maximum_Daily_Withdrawal = the_MGD_month,
+    Year = rep(the_year))
 
   #Return the dataframe
   return(the_df)
@@ -184,6 +197,8 @@ df2020 <- scrape.it(2020, "03-32-010")
 show(df2020)
 #show the structure of the dataframe 
 glimpse(df2020)
+#make sure MGD_month is numeric to avoid errors down the line
+df2020$Maximum_Daily_Withdrawal <- as.numeric(df2020$Maximum_Daily_Withdrawal)
 
 #code to plot max daily withdrawals
 df_withdrawals_2020 <-
@@ -191,7 +206,7 @@ df_withdrawals_2020 <-
   geom_line() +
   geom_point() +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
-  scale_y_continuous(labels = scales::label_number(accuracy = 0.01)) + #fix thius
+  scale_y_continuous(labels = scales::label_number(accuracy = 0.01)) + 
   #making sure months show on x axis since I got points off for that last hw
   labs(
     title = "Maximum Daily Withdrawals Across Months",
@@ -220,11 +235,12 @@ dfC2020$Maximum_Daily_Withdrawal <-
 #first use rbind to combine the two dataframes
 df_combined = rbind(df2020, dfC2020)
 df_withdrawals_2020_2 <-
-  ggplot(df_combined, aes(x = Month, y = Maximum_Daily_Withdrawal, group=Water_System_Name, color = Water_System_Name)) +
+  ggplot(df_combined, aes(x = Month, y = Maximum_Daily_Withdrawal, 
+                          group=Water_System_Name, color = Water_System_Name)) +
   geom_line() +
   geom_point() +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
-  scale_y_continuous(labels = scales::label_number(accuracy = 0.01)) + #fix thius
+  scale_y_continuous(labels = scales::label_number(accuracy = 0.01)) + #fix this
   #making sure months show on x axis since I got points off for that last hw
   labs(
     title = "Maximum Daily Withdrawals Across Months",
@@ -241,10 +257,44 @@ show(df_withdrawals_2020_2)
 > TIP: See Section 3.2 in the "06_Data_Scraping.Rmd" where we apply "map2()" to iteratively run a function over two inputs (where one of the two inputs does not change). Pipe the output of the map2() function to `bind_rows()` to combine the dataframes into a single one, and use that to construct your plot.
 
 ```{r fetch.and.plot.Cary.multiyear.data }
-#9 
+#9
+#create a vector of all years we will use
+the_years = c(2018, 2019, 2020, 2021, 2022, 2023)
+#use map2 to iteratively run the function and combine dataframes using bind_rows
+dfs_Cary <- map2(the_years, "03-92-020", scrape.it) %>%
+  bind_rows()
+show(dfs_Cary)
+#fix maximum daily withdrawal column
+dfs_Cary$Maximum_Daily_Withdrawal <-
+  as.numeric(gsub(",", "", dfs_Cary$Maximum_Daily_Withdrawal))
+
+
+#create plot, similar to same code above
+dfC_plot <-
+  ggplot(dfs_Cary, aes(x = Month, y = Maximum_Daily_Withdrawal, group=Year, 
+                       color = factor(Year))) +
+  geom_line() +
+  geom_smooth(method = "loess") +
+  geom_point() + #add rainbow color palette for clarity 
+  scale_color_manual(values = rainbow(length(unique(dfs_Cary$Year)))) +
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+  scale_y_continuous(labels = scales::label_number(accuracy = 0.01)) + #fix this
+  #making sure months show on x axis since I got points off for that last hw
+  labs(
+    title = "Maximum Daily Withdrawals Across Months",
+    x = "Month",
+    y = "Maximum Daily Withdrawal (MGD)",
+    color = "Year")
+show(dfC_plot)
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Cary have a trend in water usage over time?
-> Answer:
+> Answer: Cary's water usage follows a similar year over year pattern. 
+It is lowest from January through March, in roughly the 17.5-22.5 MGD range. 
+By March it begins steadily increasing to a summer peak of 25-30 MGD,
+around June through August.
+At which point it begins a steady decrease again until December 
+In December it reaches the same 17.5-22.5MGD range of values.
+
 >

@@ -1,7 +1,8 @@
 ---
 title: 'Demo: Interactive R Markdown'
 author: Environmental Data Analytics | John Fay & Luana Lima 
-output: pdf_document
+output: html_document
+runtime: shiny
 editor_options: 
   chunk_output_type: console
 ---
@@ -20,7 +21,7 @@ RMarkdown is a powerful tool for creating dynamic documents that combine code, t
 
 ```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
 #Load packages
-library(tidyverse);library(here);library(lubridate)
+library(tidyverse);library(here);library(lubridate);library(shiny)
 
 #Load data
 nutrient_data <- read.csv(
@@ -218,14 +219,32 @@ Note: Before running this plot, set the previous code chunk to not evaluate
 
 ```{r widget exploration, echo=FALSE}
 # Create a selectInput widget to select which nutrient to display in the plot
+selectInput(
+  inputId = "nutrient",
+  label = "Select a nutrient",
+  choices = c('tn_ug', 'tp_ug', 'nh34'),
+  selected = 'tn_ug'
+)
 
 
 # Create a sliderInput to set the date range
-
+sliderInput(
+  inputId = 'years',
+  label = 'Select Years',
+  min = min(nutrient_data$year4),
+  max = max(nutrient_data$year4),
+  value = c(min(nutrient_data$year4), max(nutrient_data$year4)),
+  sep = 1,
+  sep = ''
+)
 
 # Create a renderPlot object to display the plot 
 # created with the plot_it function
-
+renderPlot(plot_it(
+  input$nutrient,
+  input$years[1],
+  input$years[2]
+))
 
 ```
 
